@@ -64,7 +64,8 @@ def append_gig_history_to_sheet(rows, sheet_name="Master Songs and Venues"):
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-    creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+    #creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+    creds = Credentials.from_service_account_info(st.secrets["gspread_credentials"], scopes=scopes)
     client = gspread.authorize(creds)
     spreadsheet = client.open(sheet_name)
     worksheet = spreadsheet.worksheet("Gig history")
@@ -148,12 +149,12 @@ ui_modifiers = {
 
 # Automatically uncheck and grey out medley configuration rules for restricted layouts
 if is_medley_banned:
-    st.sidebar.checkbox("Include Fun Block Medley", value=False, disabled=True, help="Medleys are disabled for single-set or pure acoustic layouts.")
+    st.sidebar.checkbox("Include Fun Block", value=False, disabled=True, help="Fun Block disabled for certain gig types.")
     active_funblock = False
     active_funblock_size = 0
 else:
-    active_funblock = st.sidebar.checkbox("Include Fun Block Medley", value=True)
-    active_funblock_size = st.sidebar.slider("Fun Block Medley Track Count", min_value=4, max_value=8, value=6, disabled=not active_funblock)
+    active_funblock = st.sidebar.checkbox("Include Fun Block", value=True)
+    active_funblock_size = st.sidebar.slider("Fun Block Track Count", min_value=4, max_value=8, value=6, disabled=not active_funblock)
 
 active_modifiers = ui_modifiers.copy()
 active_modifiers["FUNBLOCK"] = active_funblock
@@ -170,7 +171,7 @@ with st.container(border=True):
     st.markdown(f"**📍 Venue:** {selected_venue}")
     st.markdown(f"**📅 Date:** {formatted_date_str}")
     st.markdown(f"**🎸 Layout Type:** {selected_gig_type}")
-    st.markdown(f"**🔀 Medley Status:** {f'Enabled ({active_funblock_size} tracks)' if active_funblock else 'Disabled'}")
+    st.markdown(f"**🔀 Fun Block Status:** {f'Enabled ({active_funblock_size} tracks)' if active_funblock else 'Disabled'}")
 
 st.markdown("")
 
@@ -339,8 +340,7 @@ if st.session_state["generated_setlist"]:
     # --- COMBINED ISOLATED COMMENTARY DISPLAYS ---
     if st.session_state["extracted_commentary"]:
         st.markdown("---")
-        st.subheader("📝 Director & Auditor Commentary")
-        with st.container(border=True):
+        with st.expander("📝 View Director & Auditor Commentary", expanded=False):
             st.markdown(st.session_state["extracted_commentary"])
             
     # --- COLLAPSIBLE PROMPT DEBUGGER BLOCK ---
