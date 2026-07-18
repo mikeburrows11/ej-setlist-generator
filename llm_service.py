@@ -8,12 +8,8 @@ def call_gemini_engine(system_instruction: str, user_prompt: str) -> str:
     A pure pass-through network layer. Takes the pre-engineered instructions 
     and prompt strings directly from setlist_engine.py and invokes the API.
     """
-    # Force alignment immediately before creating the network channel
-    if "GEMINI_API_KEY" in st.secrets:
-        os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
-        
-    # Moving this inside the function guarantees it reads the live environment variables
-    client = genai.Client()
+    # Force the SDK to use the Streamlit secret directly
+    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
     
     response = client.models.generate_content(
         model='gemini-3.1-flash-lite', 
