@@ -1,0 +1,19 @@
+name: Keep Setlist Engine Awake
+on:
+  schedule:
+    - cron: '0 0 */3 * *' # Fires automatically every 3 days
+  workflow_dispatch:      # Allows you to click a button in GitHub to run it manually
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: Push Empty Commit
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Keepalive: Automatic system pulse to maintain Streamlit container"
+          git push
