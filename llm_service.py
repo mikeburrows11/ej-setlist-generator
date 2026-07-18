@@ -1,10 +1,15 @@
 import os
+import streamlit as st
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
 # Load the environment variables from your local .env file
-load_dotenv()
+#load_dotenv()
+
+# Explicitly bind the secret to an environment variable if it isn't already set locally
+if "GEMINI_API_KEY" in st.secrets:
+    os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
 
 def call_gemini_engine(system_instruction: str, user_prompt: str) -> str:
     """
