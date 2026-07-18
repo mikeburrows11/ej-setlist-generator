@@ -12,6 +12,10 @@ if st.query_params.get("ping") == "true":
     st.text("Pong! Engine is awake.")
     st.stop()
 
+# Force Streamlit's secret store to bind to the server's OS environment variables
+if "GEMINI_API_KEY" in st.secrets:
+    os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
+
 # Import your existing engine modules
 from setlist_engine import SetlistEngine, compile_gemini_prompt, compile_audit_prompt
 from llm_service import call_gemini_engine
