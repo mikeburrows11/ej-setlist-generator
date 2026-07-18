@@ -6,6 +6,12 @@ import datetime
 import streamlit.components.v1 as components
 import os
 
+# --- LIGHTWEIGHT CRON PING CATCHER ---
+# If cron-job.org hits the app, it stops here
+if st.query_params.get("ping") == "true":
+    st.text("Pong! Engine is awake.")
+    st.stop()
+
 # Import your existing engine modules
 from setlist_engine import SetlistEngine, compile_gemini_prompt, compile_audit_prompt
 from llm_service import call_gemini_engine
