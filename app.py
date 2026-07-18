@@ -37,7 +37,8 @@ def load_all_data_cached(sheet_name="Master Songs and Venues"):
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-    creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+    #creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+    creds = Credentials.from_service_account_info(st.secrets["gspread_credentials"], scopes=scopes)
     client = gspread.authorize(creds)
     spreadsheet = client.open(sheet_name)
     
